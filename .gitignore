@@ -1,2 +1,4 @@
 /node_modules/
-.eslintrc.cjs
+*.log
+coverage
+.DS_Store
