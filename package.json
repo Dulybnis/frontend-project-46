@@ -14,7 +14,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "npx jest --watchAll"
+    "test": "npx jest"
   },
   "repository": {
     "type": "git",
