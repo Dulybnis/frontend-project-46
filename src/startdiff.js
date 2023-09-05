@@ -1,9 +1,8 @@
-import path from 'path';
-import fs from 'fs';
+import parseFile from './parsers.js';
 
 const genDiff = (file1, file2) => {
-  const comparedFile1 = JSON.parse(fs.readFileSync(path.resolve(file1)));
-  const comparedFile2 = JSON.parse(fs.readFileSync(path.resolve(file2)));
+  const comparedFile1 = parseFile(file1);
+  const comparedFile2 = parseFile(file2);
   const valueOfFile1 = Object.keys(comparedFile1).sort();
   const valueOfFile2 = Object.keys(comparedFile2).sort();
   let compares = valueOfFile1.reduce((acc, key) => {
@@ -32,18 +31,3 @@ const genDiff = (file1, file2) => {
 };
 
 export default genDiff;
-
-/* import { program } from 'commander';
-
-program
-  .name('genDiff')
-  .description('Compares two configuration files and shows a difference.')
-  .version('1.0.0')
-  .option('-f, --format <type>', 'output format')
-  .parse(process.argv);
-
-program.parse();
-
-const options = program.opts();
-if (options.version) console.log(options.version);
-if (options.help) console.log('help is not help'); */
