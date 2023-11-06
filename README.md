@@ -5,6 +5,8 @@ gendiff: compare two json files<br>
 gendiff: compare two yaml files<br>
 [![asciicast](https://asciinema.org/a/keYqcNrYSXsOjQou1IGvet3JK.svg)](https://asciinema.org/a/keYqcNrYSXsOjQou1IGvet3JK)<br>
 
+gendiff: compare two files with formatter<br>
+[![asciicast](https://asciinema.org/a/a3VnC1rHlOa4WAxoOlkHOcpeF.svg)](https://asciinema.org/a/a3VnC1rHlOa4WAxoOlkHOcpeF)<br>
 
 [![Actions Status](https://github.com/Dulybnis/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/Dulybnis/frontend-project-46/actions)
 

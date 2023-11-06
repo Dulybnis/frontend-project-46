@@ -2,7 +2,6 @@
 
 import { Command } from 'commander';
 import genDiff from '../src/startdiff.js';
-import style from '../fixtures/stylish.js';
 
 const program = new Command();
 
@@ -15,12 +14,8 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .action((file1, file2, options) => {
     // console.log(`format: ${options.format}`);
-    const diff = genDiff(file1, file2);
-    if (options.format === 'stylish') {
-      console.log(style(diff));
-    } else {
-      console.log(diff);
-    }
+    const diff = genDiff(file1, file2, options.format);
+    console.log(diff);
   });
 
 program.parse(process.argv);

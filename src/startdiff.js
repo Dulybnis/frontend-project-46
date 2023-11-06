@@ -1,5 +1,5 @@
 import parseFile from './parsers.js';
-// import style from '../fixtures/stylish.js';
+import formatter from '../formatters/index.js';
 
 const mkInternal = (nameInternal, children, deep, parent, type, updatedFrom) => ({
   name: nameInternal,
@@ -39,7 +39,7 @@ const deepClone = (key, value, deep, parent, type) => {
   return mkInternal(key, cloningValues, deep, parent, type);
 };
 
-const genDiff = (file1, file2) => {
+const genDiff = (file1, file2, option) => {
   const parseFile1 = parseFile(file1);
   const parseFile2 = parseFile(file2);
   /* let diffOptions;
@@ -79,7 +79,7 @@ const genDiff = (file1, file2) => {
 
     return (compares);
   };
-  return genDeepDiff(parseFile1, parseFile2);
+  return formatter(genDeepDiff(parseFile1, parseFile2), option);
 };
 
 export default genDiff;
