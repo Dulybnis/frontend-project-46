@@ -28,7 +28,7 @@ const style = (nodesArray) => {
       if (node.meta.type === 'updated') {
         newAcc = [
           diffConstructor(node.name, node.meta.deep, '-', node.meta.updatedFrom.value, node.meta.updatedFrom.children),
-          diffConstructor(node.name, node.meta.deep, '+', node.value, node.children),
+          diffConstructor(node.name, node.meta.deep, '+', node.value.value, node.children),
         ].flat();
       } else {
         let sumbol;

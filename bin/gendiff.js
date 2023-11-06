@@ -16,7 +16,7 @@ program
     const diff = genDiff(file1, file2, options.format);
     console.log(diff);
   })
-  .parse();
+  .parse(process.argv);
 
 const options = program.opts();
 if (options.version) console.log(options.version);

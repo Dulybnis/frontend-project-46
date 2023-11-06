@@ -63,7 +63,10 @@ const genDiff = (file1, file2, option) => {
           const updFrom = isObject(fileToDiff1[key])
             ? deepClone(key, fileToDiff1[key], deep, parent, 'not updated')
             : mkLeaf(key, fileToDiff1[key], deep, parent, 'not updated', fileToDiff2[key]);
-          nextDeep = mkLeaf(key, fileToDiff2[key], deep, parent, 'updated', updFrom);
+          const updTo = isObject(fileToDiff2[key])
+            ? deepClone(key, fileToDiff2[key], deep, parent, 'not updated')
+            : mkLeaf(key, fileToDiff2[key], deep, parent, 'not updated', fileToDiff1[key]);
+          nextDeep = mkLeaf(key, updTo, deep, parent, 'updated', updFrom);
         }
       } else if (valueOfFile1.includes(key)) { // includes in first files
         nextDeep = deepClone(key, fileToDiff1[key], deep, parent, 'removed');
