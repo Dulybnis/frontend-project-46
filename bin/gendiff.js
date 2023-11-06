@@ -13,12 +13,10 @@ program
   .version('1.0.0')
   .option('-f, --format <type>', 'output format', 'stylish')
   .action((file1, file2, options) => {
-    // console.log(`format: ${options.format}`);
     const diff = genDiff(file1, file2, options.format);
     console.log(diff);
-  });
-
-program.parse(process.argv);
+  })
+  .parse(process.argv);
 
 const options = program.opts();
 if (options.version) console.log(options.version);
