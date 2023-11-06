@@ -42,10 +42,6 @@ const deepClone = (key, value, deep, parent, type) => {
 const genDiff = (file1, file2, option) => {
   const parseFile1 = parseFile(file1);
   const parseFile2 = parseFile(file2);
-  /* let diffOptions;
-  if (option === 'stylish') {
-    diffOptions = style;
-  } */
 
   const genDeepDiff = (fileToDiff1, fileToDiff2, deep = 1, parent = []) => {
     const valueOfFile1 = Object.keys(fileToDiff1);

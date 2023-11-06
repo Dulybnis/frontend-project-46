@@ -2,3 +2,4 @@
 *.log
 coverage
 .DS_Store
+/__tests__/json.back

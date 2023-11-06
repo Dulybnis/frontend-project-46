@@ -8,6 +8,9 @@ gendiff: compare two yaml files<br>
 gendiff: compare two files with formatter<br>
 [![asciicast](https://asciinema.org/a/a3VnC1rHlOa4WAxoOlkHOcpeF.svg)](https://asciinema.org/a/a3VnC1rHlOa4WAxoOlkHOcpeF)<br>
 
+gendiff: compare two files with formatter with json<br>
+[![asciicast](https://asciinema.org/a/xwPapLT61FePChsQUAqkRR2Dq.svg)](https://asciinema.org/a/xwPapLT61FePChsQUAqkRR2Dq)<br>
+
 [![Actions Status](https://github.com/Dulybnis/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/Dulybnis/frontend-project-46/actions)
 
 <a href="https://codeclimate.com/github/Dulybnis/frontend-project-46/maintainability"><img src="https://api.codeclimate.com/v1/badges/1803038de0989bc0f2bc/maintainability" /></a>
