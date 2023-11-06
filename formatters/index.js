@@ -15,7 +15,7 @@ const formatter = (diff, option) => {
   if (option === 'without') {
     return diff;
   }
-  return 'unknown formatter';
+  return style(diff);
 };
 
 export default formatter;
