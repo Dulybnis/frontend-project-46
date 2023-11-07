@@ -24,35 +24,28 @@ const style = (nodesArray) => {
     };
 
     const output = nodes.reduce((acc, node) => {
-      let newAcc = [];
       if (node.meta.type === 'updated') {
         const updatedTo = (node.value) ? node.value : node.children;
         const updatedChildren = (updatedTo.value) ? updatedTo.value : updatedTo.children;
-        newAcc = [
+        const newAcc = [
           diffConstructor(node.name, node.meta.deep, '-', node.meta.updatedFrom.value, node.meta.updatedFrom.children),
           diffConstructor(node.name, node.meta.deep, '+', updatedTo.value, updatedChildren),
         ].flat();
-      } else {
-        let sumbol;
-        switch (node.meta.type) {
-          case 'not updated':
-            sumbol = ' ';
-            break;
-
-          case 'removed':
-            sumbol = '-';
-            break;
-
-          case 'added':
-            sumbol = '+';
-            break;
-
-          default:
-            sumbol = ' ';
-        }
-        newAcc = diffConstructor(node.name, node.meta.deep, sumbol, node.value, node.children);
+        return [...acc, newAcc].flat();
       }
-      return [...acc, newAcc].flat();
+      if (node.meta.type === 'not updated') {
+        const newAcc = diffConstructor(node.name, node.meta.deep, ' ', node.value, node.children);
+        return [...acc, newAcc].flat();
+      }
+      if (node.meta.type === 'removed') {
+        const newAcc = diffConstructor(node.name, node.meta.deep, '-', node.value, node.children);
+        return [...acc, newAcc].flat();
+      }
+      if (node.meta.type === 'added') {
+        const newAcc = diffConstructor(node.name, node.meta.deep, '+', node.value, node.children);
+        return [...acc, newAcc].flat();
+      }
+      return acc;
     }, []);
 
     return output;

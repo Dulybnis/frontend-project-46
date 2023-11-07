@@ -9,21 +9,23 @@ const constructor = (node) => {
 
 const plain = (nodes) => {
   const plainOutput = nodes.reduce((acc, node) => {
-    let newAcc = [];
     const property = [...node.meta.parent, node.name].join('.');
     if (node.meta.type === 'added') {
       const value = constructor(node);
-      newAcc = `Property '${property}' was added with value: ${value}`;
-    } else if (node.meta.type === 'removed') {
-      newAcc = (`Property '${property}' was removed`);
-    } else if (node.meta.type === 'updated') {
+      return [...acc, `Property '${property}' was added with value: ${value}`].flat();
+    }
+    if (node.meta.type === 'removed') {
+      return [...acc, `Property '${property}' was removed`].flat();
+    }
+    if (node.meta.type === 'updated') {
       const from = constructor(node.meta.updatedFrom);
       const to = constructor(node);
-      newAcc = `Property '${property}' was updated. From ${from} to ${to}`;
-    } else if (node.meta.type === 'not updated' && node.children) {
-      newAcc = plain(node.children);
+      return [...acc, `Property '${property}' was updated. From ${from} to ${to}`].flat();
     }
-    return [...acc, newAcc].flat();
+    if (node.meta.type === 'not updated' && node.children) {
+      return [...acc, plain(node.children)].flat();
+    }
+    return acc;
   }, []);
 
   return plainOutput.join('\n');
