@@ -13,10 +13,10 @@ const nextValue = (deep, key, sumbol, value = '{') => {
 const style = (nodesArray) => {
   const styleArray = (nodes) => {
     const diffConstructor = (name, deep, symbol, value, children) => {
-      const constructor = children
+      const constructor = (Array.isArray(children))
         ? [
           nextValue(deep, name, symbol),
-          styleArray([children].flat()),
+          styleArray(children),
           endDeep(deep),
         ].flat()
         : nextValue(deep, name, symbol, value);
@@ -26,9 +26,11 @@ const style = (nodesArray) => {
     const output = nodes.reduce((acc, node) => {
       let newAcc = [];
       if (node.meta.type === 'updated') {
+        const updatedTo = (node.value) ? node.value : node.children;
+        const updatedChildren = (updatedTo.value) ? updatedTo.value : updatedTo.children;
         newAcc = [
           diffConstructor(node.name, node.meta.deep, '-', node.meta.updatedFrom.value, node.meta.updatedFrom.children),
-          diffConstructor(node.name, node.meta.deep, '+', node.value.value, node.children),
+          diffConstructor(node.name, node.meta.deep, '+', updatedTo.value, updatedChildren),
         ].flat();
       } else {
         let sumbol;
@@ -48,8 +50,7 @@ const style = (nodesArray) => {
           default:
             sumbol = ' ';
         }
-        newAcc = [diffConstructor(node.name, node.meta.deep, sumbol, node.value, node.children)]
-          .flat();
+        newAcc = diffConstructor(node.name, node.meta.deep, sumbol, node.value, node.children);
       }
       return [...acc, newAcc].flat();
     }, []);

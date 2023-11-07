@@ -1,42 +1,38 @@
 import parseFile from './parsers.js';
 import formatter from '../formatters/index.js';
 
-const mkInternal = (nameInternal, children, deep, parent, type, updatedFrom) => ({
-  name: nameInternal,
-  children,
-  meta: {
-    deep,
-    parent,
-    type,
-    updatedFrom,
-  },
-});
-
-const mkLeaf = (nameLeaf, value, deep, parent, type, updatedFrom) => ({
-  name: nameLeaf,
-  value,
-  meta: {
-    deep,
-    parent,
-    type,
-    updatedFrom,
-  },
-});
+const makeKnot = (nameInternal, value, deep, parent, type, updatedFrom) => {
+  const knot = {
+    name: nameInternal,
+    meta: {
+      deep,
+      parent,
+      type,
+      updatedFrom,
+    },
+  };
+  if (Array.isArray(value)) {
+    knot.children = value;
+  } else {
+    knot.value = value;
+  }
+  return knot;
+};
 
 const isObject = (obj) => (typeof obj === 'object' && obj != null && !Array.isArray(obj));
 
-const deepClone = (key, value, deep, parent, type) => {
+const deepClone = (key, value, deep, parent, type, updatedFrom) => {
   if (!isObject(value)) {
-    return mkLeaf(key, value, deep, parent, type);
+    return makeKnot(key, value, deep, parent, type, updatedFrom);
   }
   const valueKeys = Object.keys(value);
   const cloningValues = valueKeys.reduce((acc, cloningKey) => {
-    if (!isObject(value[cloningKey])) {
-      return [...acc, mkLeaf(cloningKey, value[cloningKey], deep + 1, [...parent, key], 'not update')];
+    if (typeof value[cloningKey] !== 'object' || value[cloningKey] === null) {
+      return [...acc, makeKnot(cloningKey, value[cloningKey], deep + 1, [...parent, key], 'not update', updatedFrom)];
     }
-    return [...acc, deepClone(cloningKey, value[cloningKey], deep + 1, [...parent, key], 'not update')];
+    return [...acc, deepClone(cloningKey, value[cloningKey], deep + 1, [...parent, key], 'not update', updatedFrom)];
   }, []);
-  return mkInternal(key, cloningValues, deep, parent, type);
+  return makeKnot(key, cloningValues, deep, parent, type, updatedFrom);
 };
 
 const genDiff = (file1, file2, option) => {
@@ -56,17 +52,13 @@ const genDiff = (file1, file2, option) => {
       if (valueOfFile1.includes(key) && valueOfFile2.includes(key)) { // includes in two files
         if (isObject(fileToDiff1[key]) && isObject(fileToDiff2[key])) {
           const nextDeepDeef = genDeepDiff(fileToDiff1[key], fileToDiff2[key], deep + 1, newParent);
-          nextDeep = mkInternal(key, nextDeepDeef, deep, parent, 'not updated', fileToDiff1[key]);
+          nextDeep = makeKnot(key, nextDeepDeef, deep, parent, 'not updated', fileToDiff1[key]);
         } else if (fileToDiff1[key] === fileToDiff2[key]) {
-          nextDeep = mkLeaf(key, fileToDiff1[key], deep, parent, 'not updated');
+          nextDeep = makeKnot(key, fileToDiff1[key], deep, parent, 'not updated');
         } else {
-          const updFrom = isObject(fileToDiff1[key])
-            ? deepClone(key, fileToDiff1[key], deep, parent, 'not updated')
-            : mkLeaf(key, fileToDiff1[key], deep, parent, 'not updated', fileToDiff2[key]);
-          const updTo = isObject(fileToDiff2[key])
-            ? deepClone(key, fileToDiff2[key], deep, parent, 'not updated')
-            : mkLeaf(key, fileToDiff2[key], deep, parent, 'not updated', fileToDiff1[key]);
-          nextDeep = mkLeaf(key, updTo, deep, parent, 'updated', updFrom);
+          const updFrom = deepClone(key, fileToDiff1[key], deep, parent, 'not updated', fileToDiff2[key]);
+          const updTo = deepClone(key, fileToDiff2[key], deep, parent, 'not updated', fileToDiff1[key]);
+          nextDeep = makeKnot(key, updTo, deep, parent, 'updated', updFrom);
         }
       } else if (valueOfFile1.includes(key)) { // includes in first files
         nextDeep = deepClone(key, fileToDiff1[key], deep, parent, 'removed');

@@ -1,6 +1,8 @@
 const constructor = (node) => {
-  const textValue = (typeof node.value === 'string') ? `'${node.value}'` : node.value;
-  const value = node.children ? '[complex value]' : textValue;
+  const valueNode = (node.meta.type === 'updated') ? node.value.value : node.value;
+  const childrenNode = (node.meta.type === 'updated') ? node.value.children : node.children;
+  const textValue = (typeof valueNode === 'string') ? `'${valueNode}'` : valueNode;
+  const value = childrenNode ? '[complex value]' : textValue;
 
   return value;
 };
