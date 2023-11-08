@@ -1,9 +1,23 @@
+import _ from 'lodash';
 import parseFile from './parsers.js';
 import formatter from '../formatters/index.js';
 
 const makeKnot = (nameInternal, value, deep, parent, type, updatedFrom) => {
-  const knot = {
+  if (Array.isArray(value)) {
+    return {
+      name: nameInternal,
+      children: value,
+      meta: {
+        deep,
+        parent,
+        type,
+        updatedFrom,
+      },
+    };
+  }
+  return {
     name: nameInternal,
+    value,
     meta: {
       deep,
       parent,
@@ -11,12 +25,6 @@ const makeKnot = (nameInternal, value, deep, parent, type, updatedFrom) => {
       updatedFrom,
     },
   };
-  if (Array.isArray(value)) {
-    knot.children = value;
-    return knot;
-  }
-  knot.value = value;
-  return knot;
 };
 
 const isObject = (obj) => (typeof obj === 'object' && obj != null && !Array.isArray(obj));
@@ -42,9 +50,7 @@ const genDiff = (file1, file2, option) => {
   const genDeepDiff = (fileToDiff1, fileToDiff2, deep = 1, parent = []) => {
     const valueOfFile1 = Object.keys(fileToDiff1);
     const valueOfFile2 = Object.keys(fileToDiff2);
-    const valueOfFileUnsort = [].concat(valueOfFile1, valueOfFile2)
-      .reduce((acc, item) => ((acc.includes(item)) ? acc : [...acc, item]), []);
-    const valueOfFile = valueOfFileUnsort.sort();
+    const valueOfFile = _.sortBy(_.uniq([].concat(valueOfFile1, valueOfFile2)));
 
     const compares = valueOfFile.reduce((acc, key) => {
       const newParent = [...parent, key];
