@@ -1,7 +1,15 @@
 ### Hexlet tests and linter status:
-gendiff<br>
-download: git clone "https://github.com/Dulybnis/frontend-project-46.git"<br>
-install: make install<br>
+**gendiff**<br><br>
+Compare two files. <br><br>
+Output formater:<br>
+* **stylish** (default)<br>
+* **plain**<br>
+* **json**
+<br><br>
+**download**: `git clone "https://github.com/Dulybnis/frontend-project-46.git"`<br>
+**install**: `make install`<br>
+**run**: `gendiff [options] <filepath1> <filepath2>`<br>
+**help**: `gendiff -h`<br>
 
 gendiff: compare two json files<br>
 [![asciicast](https://asciinema.org/a/jl7xuSlBGrudZ9ZvOhdyvNHUR.svg)](https://asciinema.org/a/jl7xuSlBGrudZ9ZvOhdyvNHUR)<br>

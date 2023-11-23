@@ -3,19 +3,22 @@ import plain from './plain.js';
 import json from './json.js';
 
 const formatter = (diff, option) => {
-  if (option === 'plain') {
-    return plain(diff);
+  switch (option) {
+    case 'plain':
+      return plain(diff);
+
+    case 'stylish':
+      return style(diff);
+
+    case 'json':
+      return json(diff);
+
+    case 'without':
+      return diff;
+
+    default:
+      throw new Error(`Invalid data - ${option}`);
   }
-  if (option === 'stylish') {
-    return style(diff);
-  }
-  if (option === 'json') {
-    return json(diff);
-  }
-  if (option === 'without') {
-    return diff;
-  }
-  return style(diff);
 };
 
 export default formatter;

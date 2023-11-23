@@ -1,38 +1,52 @@
 const diffIdent = ' ';
 
-const endDeep = (deep) => {
+const buildEndIndent = (deep) => {
   const endIdent = diffIdent.repeat(deep * 4);
   return `${endIdent}}`;
 };
 
-const nextValue = (deep, key, sumbol, value = '{') => {
+const buildNextValue = (deep, key, sumbol, value = '{') => {
   const indent = diffIdent.repeat(deep * 4 - 2);
   return `${indent}${sumbol} ${key}: ${value}`;
 };
 
 const style = (nodes, deep = 1) => {
   const step = (nodeStep, deepStep, symbol) => {
-    const stepOut = (nodeStep.children)
+    const stepOut = (Array.isArray(nodeStep.value))
       ? [
-        nextValue(deepStep, nodeStep.key, symbol),
-        style(nodeStep.children, deep + 1),
-        endDeep(deepStep),
+        buildNextValue(deepStep, nodeStep.key, symbol),
+        style(nodeStep.value, deep + 1),
+        buildEndIndent(deepStep),
       ].flat()
-      : [nextValue(deepStep, nodeStep.key, symbol, nodeStep.value)].flat();
+      : [buildNextValue(deepStep, nodeStep.key, symbol, nodeStep.value)].flat();
     return stepOut;
   };
 
   const styleOut = nodes.flatMap((node) => {
-    if (node.status === 'added' || node.status === 'updatedTo') {
-      return step(node, deep, '+');
+    switch (node.status) {
+      case 'added':
+        return step(node, deep, '+');
+
+      case 'removed':
+        return step(node, deep, '-');
+
+      case 'nested':
+      case 'unchanged':
+        return step(node, deep, ' ');
+
+      case 'changed':
+        return [
+          step({
+            key: node.key,
+            value: node.oldValue,
+            status: node.status,
+          }, deep, '-'),
+          step(node, deep, '+'),
+        ].flat();
+
+      default:
+        throw new Error(`Invalid data - ${node.status}`);
     }
-    if (node.status === 'removed' || node.status === 'updatedFrom') {
-      return step(node, deep, '-');
-    }
-    if (node.status === 'nested') {
-      return step(node, deep, ' ');
-    }
-    throw new Error(`Invalid data - ${node}`);
   });
   return styleOut;
 };

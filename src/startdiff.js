@@ -4,7 +4,7 @@ import parse from './parsers.js';
 import formatter from './formatters/index.js';
 import buildDiffTree from './buildDiffTree.js';
 
-const genDiff = (filepath1, filepath2, option) => {
+const genDiff = (filepath1, filepath2, option = 'stylish') => {
   const absoluteFilepath1 = path.resolve(process.cwd(), filepath1);
   const absoluteFilepath2 = path.resolve(process.cwd(), filepath2);
   const ext1 = path.extname(filepath1);

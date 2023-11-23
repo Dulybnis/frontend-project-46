@@ -1,29 +1,37 @@
+import _ from 'lodash';
+
 const plain = (nodes, parent = []) => {
-  const plainOutput = nodes.flatMap((node, index) => {
+  const plainOutput = nodes.flatMap((node) => {
     const property = [...parent, node.key].join('.');
-    const value = (typeof node.value === 'string') ? `'${node.value}'` : node.value;
-    if (node.children && node.status === 'nested') {
-      return plain(node.children, [...parent, node.key]);
+    const complexValue = (val) => {
+      if (_.isObject(val)) {
+        return '[complex value]';
+      }
+      if (typeof val === 'string') {
+        return `'${val}'`;
+      }
+      return val;
+    };
+
+    switch (node.status) {
+      case 'nested':
+        return plain(node.value, [...parent, node.key]);
+
+      case 'added':
+        return `Property '${property}' was added with value: ${complexValue(node.value)}`;
+
+      case 'unchanged':
+        return 'not use';
+
+      case 'removed':
+        return `Property '${property}' was removed`;
+
+      case 'changed':
+        return `Property '${property}' was updated. From ${complexValue(node.oldValue)} to ${complexValue(node.value)}`;
+
+      default:
+        throw new Error(`Invalid data - ${node.status}`);
     }
-    if (node.status === 'added') {
-      return (node.children)
-        ? `Property '${property}' was added with value: [complex value]`
-        : `Property '${property}' was added with value: ${value}`;
-    }
-    if (node.status === 'removed') {
-      return `Property '${property}' was removed`;
-    }
-    if (node.status === 'updatedFrom') {
-      const from = (node.children) ? '[complex value]' : value;
-      const toNode = nodes[index + 1];
-      const toValue = (typeof toNode.value === 'string') ? `'${toNode.value}'` : toNode.value;
-      const to = (toNode.children) ? '[complex value]' : toValue;
-      return `Property '${property}' was updated. From ${from} to ${to}`;
-    }
-    if (node.status === 'updatedTo' || node.status === 'nested') {
-      return 'not use';
-    }
-    throw new Error(`Invalid data - ${node.status}`);
   });
 
   return plainOutput.filter((key) => key !== 'not use').join('\n');
