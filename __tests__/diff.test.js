@@ -6,15 +6,9 @@ import genDiff from '../src/startdiff.js';
 
 const extensions = ['yml', 'json'];
 
-let expectrdStylish;
-let expectedPlain;
-let expectedJson;
-
-beforeAll(() => {
-  expectrdStylish = fs.readFileSync('./__tests__/expectedStylish.txt', 'utf-8');
-  expectedPlain = fs.readFileSync('./__tests__/expectedPlain.txt', 'utf-8');
-  expectedJson = fs.readFileSync('./__tests__/expectedJson.json', 'utf-8');
-});
+const expectrdStylish = fs.readFileSync('./__tests__/expectedStylish.txt', 'utf-8');
+const expectedPlain = fs.readFileSync('./__tests__/expectedPlain.txt', 'utf-8');
+const expectedJson = fs.readFileSync('./__tests__/expectedJson.json', 'utf-8');
 
 const readFixtures = (path) => (`./__fixtures__/${path}`);
 

@@ -1,7 +1,4 @@
-install: install-deps
-	npx simple-git-hooks
-
-install-deps:
+install:
 	npm ci
 
 publish:
