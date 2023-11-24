@@ -1,17 +1,18 @@
 import _ from 'lodash';
 
+const complexValue = (val) => {
+  if (_.isObject(val)) {
+    return '[complex value]';
+  }
+  if (typeof val === 'string') {
+    return `'${val}'`;
+  }
+  return val;
+};
+
 const plain = (nodes, parent = []) => {
   const plainOutput = nodes.flatMap((node) => {
     const property = [...parent, node.key].join('.');
-    const complexValue = (val) => {
-      if (_.isObject(val)) {
-        return '[complex value]';
-      }
-      if (typeof val === 'string') {
-        return `'${val}'`;
-      }
-      return val;
-    };
 
     switch (node.status) {
       case 'nested':
